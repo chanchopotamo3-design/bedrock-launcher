@@ -1,8 +1,7 @@
-using System.Diagnostics;
-using System.Text;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using BedrockLauncher.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;          // ← esta línea la agregas tú
 namespace BedrockLauncher.Services;
 
 /// <summary>Detecta instalaciones legítimas de Bedrock (Microsoft Store), las lanza y las desinstala.
