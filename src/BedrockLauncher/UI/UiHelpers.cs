@@ -1,9 +1,7 @@
-using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using BedrockLauncher.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;          // ← esta línea la agregas tú
 namespace BedrockLauncher.UI;
 
 public class PageVisConverter : IValueConverter
