@@ -1,8 +1,7 @@
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Text.Json;
-using System.Windows.Input;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;          // ← esta línea la agregas tú
 
 namespace BedrockLauncher.Core;
 
