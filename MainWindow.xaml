@@ -1,0 +1,307 @@
+<Window x:Class="BedrockLauncher.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Bedrock Ultimate Launcher" Width="1200" Height="760" MinWidth="760" MinHeight="540"
+        WindowStartupLocation="CenterScreen" Background="{DynamicResource BgBrush}" FontFamily="Segoe UI" FontSize="14">
+    <Grid TextElement.Foreground="{DynamicResource TextBrush}">
+        <Image Source="{Binding BackgroundImage, Converter={StaticResource Img}}" Stretch="UniformToFill" Opacity="0.3" IsHitTestVisible="False"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding SidebarWidth}"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- ===== MENÚ LATERAL ===== -->
+            <Border Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,2,0">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="⛏" FontSize="30" HorizontalAlignment="Center" Margin="0,16,0,2"/>
+                    <TextBlock DockPanel.Dock="Top" Text="BEDROCK&#10;ULTIMATE" FontWeight="Bold" TextAlignment="Center" Margin="0,0,0,16" Visibility="{Binding ShowLabels, Converter={StaticResource BoolVis}}"/>
+                    <StackPanel>
+                        <Button Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="home">
+                            <Grid><Border Width="4" HorizontalAlignment="Left" Background="{DynamicResource AccentBrush}" Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=home}"/>
+                                <StackPanel Orientation="Horizontal" Margin="18,0,0,0"><TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE80F;" FontSize="18" Width="28" VerticalAlignment="Center"/><TextBlock Text="{Binding L[nav_home]}" Visibility="{Binding ShowLabels, Converter={StaticResource BoolVis}}"/></StackPanel></Grid></Button>
+                        <Button Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="versions">
+                            <Grid><Border Width="4" HorizontalAlignment="Left" Background="{DynamicResource AccentBrush}" Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=versions}"/>
+                                <StackPanel Orientation="Horizontal" Margin="18,0,0,0"><TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE896;" FontSize="18" Width="28" VerticalAlignment="Center"/><TextBlock Text="{Binding L[nav_versions]}" Visibility="{Binding ShowLabels, Converter={StaticResource BoolVis}}"/></StackPanel></Grid></Button>
+                        <Button Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="content">
+                            <Grid><Border Width="4" HorizontalAlignment="Left" Background="{DynamicResource AccentBrush}" Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=content}"/>
+                                <StackPanel Orientation="Horizontal" Margin="18,0,0,0"><TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8F1;" FontSize="18" Width="28" VerticalAlignment="Center"/><TextBlock Text="{Binding L[nav_content]}" Visibility="{Binding ShowLabels, Converter={StaticResource BoolVis}}"/></StackPanel></Grid></Button>
+                        <Button Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="backups">
+                            <Grid><Border Width="4" HorizontalAlignment="Left" Background="{DynamicResource AccentBrush}" Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=backups}"/>
+                                <StackPanel Orientation="Horizontal" Margin="18,0,0,0"><TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74E;" FontSize="18" Width="28" VerticalAlignment="Center"/><TextBlock Text="{Binding L[nav_backups]}" Visibility="{Binding ShowLabels, Converter={StaticResource BoolVis}}"/></StackPanel></Grid></Button>
+                        <Button Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="profiles">
+                            <Grid><Border Width="4" HorizontalAlignment="Left" Background="{DynamicResource AccentBrush}" Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=profiles}"/>
+                                <StackPanel Orientation="Horizontal" Margin="18,0,0,0"><TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE77B;" FontSize="18" Width="28" VerticalAlignment="Center"/><TextBlock Text="{Binding L[nav_profiles]}" Visibility="{Binding ShowLabels, Converter={StaticResource BoolVis}}"/></StackPanel></Grid></Button>
+                        <Button Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="settings">
+                            <Grid><Border Width="4" HorizontalAlignment="Left" Background="{DynamicResource AccentBrush}" Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=settings}"/>
+                                <StackPanel Orientation="Horizontal" Margin="18,0,0,0"><TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE713;" FontSize="18" Width="28" VerticalAlignment="Center"/><TextBlock Text="{Binding L[nav_settings]}" Visibility="{Binding ShowLabels, Converter={StaticResource BoolVis}}"/></StackPanel></Grid></Button>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- ===== ÁREA PRINCIPAL ===== -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+
+                <Border Background="{DynamicResource PanelBrush}" Padding="12,8" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,0,2">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Left" Text="🔎" VerticalAlignment="Center" Margin="4,0"/>
+                        <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding L[search]}" MaxWidth="460" HorizontalAlignment="Left" MinWidth="240"/>
+                    </DockPanel>
+                </Border>
+
+                <Grid Grid.Row="1" x:Name="PagesHost">
+                    <!-- ===== INICIO ===== -->
+                    <ScrollViewer Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=home}" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="16">
+                            <Border Height="250" Margin="6">
+                                <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#1F5E2A" Offset="0"/><GradientStop Color="#2B7A9B" Offset="0.6"/><GradientStop Color="#3A2A6B" Offset="1"/></LinearGradientBrush></Border.Background>
+                                <Grid Margin="28">
+                                    <StackPanel VerticalAlignment="Top">
+                                        <TextBlock Text="BEDROCK ULTIMATE LAUNCHER" FontSize="32" FontWeight="Black" Foreground="White" TextWrapping="Wrap"/>
+                                        <TextBlock Foreground="#E6FFFFFF" FontSize="15" Margin="0,6,0,0"><Run Text="{Binding L[selected_version], Mode=OneWay}"/><Run Text=": "/><Run Text="{Binding SelectedVersionText, Mode=OneWay}"/></TextBlock>
+                                        <TextBlock Foreground="#E6FFFFFF" FontSize="15"><Run Text="{Binding L[latest], Mode=OneWay}"/><Run Text=": "/><Run Text="{Binding LatestText, Mode=OneWay}"/></TextBlock>
+                                        <TextBlock Foreground="#E6FFFFFF" FontSize="15"><Run Text="{Binding L[status], Mode=OneWay}"/><Run Text=": "/><Run Text="{Binding StatusText, Mode=OneWay}"/></TextBlock>
+                                    </StackPanel>
+                                    <Button Style="{StaticResource OreButton}" Command="{Binding PlayCommand}" Content="{Binding L[play]}" FontSize="28" Width="280" Height="64" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0"/>
+                                </Grid>
+                            </Border>
+                            <TextBlock Text="{Binding L[quick]}" Style="{StaticResource H1}" Margin="6,16,6,6"/>
+                            <WrapPanel>
+                                <Button Style="{StaticResource OreGray}" Width="190" Command="{Binding OpenCategoryCommand}" CommandParameter="cat_addons" Content="{Binding L[q_addons]}"/>
+                                <Button Style="{StaticResource OreGray}" Width="190" Command="{Binding OpenCategoryCommand}" CommandParameter="cat_textures" Content="{Binding L[q_textures]}"/>
+                                <Button Style="{StaticResource OreGray}" Width="190" Command="{Binding OpenCategoryCommand}" CommandParameter="cat_skins" Content="{Binding L[q_skins]}"/>
+                            </WrapPanel>
+                            <TextBlock Text="{Binding L[news]}" Style="{StaticResource H1}" Margin="6,16,6,6"/>
+                            <ItemsControl ItemsSource="{Binding HomeNews}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource Card}">
+                                            <DockPanel>
+                                                <Button DockPanel.Dock="Right" Style="{StaticResource OreGray}" Content="{Binding DataContext.L[open], RelativeSource={RelativeSource AncestorType=Window}}" Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding Url}"/>
+                                                <StackPanel><TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap"/><TextBlock Style="{StaticResource Sub}"><Run Text="{Binding DateText, Mode=OneWay}"/><Run Text="  ·  "/><Run Text="{Binding TypeText, Mode=OneWay}"/></TextBlock></StackPanel>
+                                            </DockPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- ===== VERSIONES ===== -->
+                    <ScrollViewer Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=versions}" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="16">
+                            <TextBlock Text="{Binding L[nav_versions]}" Style="{StaticResource H1}"/>
+                            <ItemsControl ItemsSource="{Binding Installs}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource Card}">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding ChannelName}" FontSize="18" FontWeight="Bold"/>
+                                                <TextBlock Style="{StaticResource Sub}"><Run Text="{Binding StatusText, Mode=OneWay}"/><Run Text="  ·  v"/><Run Text="{Binding VersionText, Mode=OneWay}"/><Run Text="  ·  "/><Run Text="{Binding InstalledOnText, Mode=OneWay}"/><Run Text="  ·  "/><Run Text="{Binding SizeText, Mode=OneWay}"/></TextBlock>
+                                                <WrapPanel Margin="0,8,0,0">
+                                                    <Button Style="{StaticResource OreButton}" Content="{Binding DataContext.L[install_update], RelativeSource={RelativeSource AncestorType=Window}}" Command="{Binding DataContext.StoreCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                                    <Button Style="{StaticResource OreGray}" Content="{Binding DataContext.L[uninstall], RelativeSource={RelativeSource AncestorType=Window}}" Command="{Binding DataContext.UninstallCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                                    <Button Style="{StaticResource OreGray}" Content="{Binding DataContext.L[open_folder], RelativeSource={RelativeSource AncestorType=Window}}" Command="{Binding DataContext.OpenDataFolderCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                                </WrapPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <DockPanel>
+                                <Button DockPanel.Dock="Right" Style="{StaticResource OreGray}" Content="{Binding L[refresh]}" Command="{Binding ReloadNewsCommand}"/>
+                                <TextBlock Text="{Binding L[official_releases]}" Style="{StaticResource H1}" Margin="6,16,6,6"/>
+                            </DockPanel>
+                            <ItemsControl ItemsSource="{Binding Releases}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource Card}" Padding="8">
+                                            <DockPanel>
+                                                <Button DockPanel.Dock="Right" Style="{StaticResource OreGray}" Content="{Binding DataContext.L[open], RelativeSource={RelativeSource AncestorType=Window}}" Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding Url}"/>
+                                                <TextBlock Width="110" FontWeight="Bold" Text="{Binding Version}" VerticalAlignment="Center"/>
+                                                <TextBlock Width="110" Text="{Binding DateText}" Style="{StaticResource Sub}" VerticalAlignment="Center"/>
+                                                <TextBlock Width="110" Text="{Binding TypeText}" Style="{StaticResource Sub}" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                            </DockPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- ===== CONTENIDO ===== -->
+                    <DockPanel Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=content}" Margin="16">
+                        <StackPanel DockPanel.Dock="Top">
+                            <TextBlock Text="{Binding L[nav_content]}" Style="{StaticResource H1}"/>
+                            <WrapPanel>
+                                <Button Style="{StaticResource OreButton}" Content="{Binding L[import]}" Command="{Binding ImportCommand}"/>
+                                <Button Style="{StaticResource OreGray}" Content="{Binding L[refresh]}" Command="{Binding RefreshCommand}"/>
+                                <Button Style="{StaticResource OreGray}" Content="{Binding L[open_folder]}" Command="{Binding OpenContentFolderCommand}"/>
+                            </WrapPanel>
+                            <WrapPanel Margin="0,4,0,8">
+                                <Button Style="{StaticResource OreGray}" Content="{Binding L[cat_all]}" Command="{Binding OpenCategoryCommand}" CommandParameter="cat_all" Padding="10,4"/>
+                                <Button Style="{StaticResource OreGray}" Content="{Binding L[cat_addons]}" Command="{Binding OpenCategoryCommand}" CommandParameter="cat_addons" Padding="10,4"/>
+                                <Button Style="{StaticResource OreGray}" Content="{Binding L[cat_textures]}" Command="{Binding OpenCategoryCommand}" CommandParameter="cat_textures" Padding="10,4"/>
+                                <Button Style="{StaticResource OreGray}" Content="{Binding L[cat_shaders]}" Command="{Binding OpenCategoryCommand}" CommandParameter="cat_shaders" Padding="10,4"/>
+                                <Button Style="{StaticResource OreGray}" Content="{Binding L[cat_skins]}" Command="{Binding OpenCategoryCommand}" CommandParameter="cat_skins" Padding="10,4"/>
+                                <Button Style="{StaticResource OreGray}" Content="{Binding L[cat_worlds]}" Command="{Binding OpenCategoryCommand}" CommandParameter="cat_worlds" Padding="10,4"/>
+                                <Button Style="{StaticResource OreGray}" Content="{Binding L[cat_templates]}" Command="{Binding OpenCategoryCommand}" CommandParameter="cat_templates" Padding="10,4"/>
+                            </WrapPanel>
+                        </StackPanel>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <ItemsControl ItemsSource="{Binding ContentView}">
+                                <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource Card}" Width="330">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="72"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                                <Border Width="64" Height="64" VerticalAlignment="Top" Background="{DynamicResource InputBrush}"><Image Source="{Binding IconPath, Converter={StaticResource Img}}" Stretch="UniformToFill"/></Border>
+                                                <StackPanel Grid.Column="1">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Text="{Binding Subtitle}" Style="{StaticResource Sub}" FontSize="12"/>
+                                                    <TextBlock Text="{Binding Description}" Style="{StaticResource Sub}" MaxHeight="36" TextTrimming="CharacterEllipsis" Margin="0,4,0,0"/>
+                                                    <TextBlock Text="{Binding Warning}" Foreground="#FFB020" TextWrapping="Wrap" FontSize="12" Visibility="{Binding Warning, Converter={StaticResource NotEmptyVis}}"/>
+                                                    <WrapPanel Margin="0,6,0,0">
+                                                        <Button Style="{StaticResource OreButton}" Padding="10,3" Margin="0,0,6,0" Content="{Binding StateText}" Visibility="{Binding CanToggle, Converter={StaticResource BoolVis}}" Command="{Binding DataContext.ToggleCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                                        <Button Style="{StaticResource OreGray}" Padding="10,3" Margin="0" Content="{Binding DataContext.L[delete], RelativeSource={RelativeSource AncestorType=Window}}" Command="{Binding DataContext.DeleteContentCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                                    </WrapPanel>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </DockPanel>
+
+                    <!-- ===== COPIAS ===== -->
+                    <ScrollViewer Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=backups}" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="16">
+                            <TextBlock Text="{Binding L[backup_for]}" Style="{StaticResource H1}"/>
+                            <WrapPanel>
+                                <Button Style="{StaticResource OreButton}" Content="{Binding L[create_backup]}" Command="{Binding CreateBackupCommand}"/>
+                                <Button Style="{StaticResource OreGray}" Content="{Binding L[open_folder]}" Command="{Binding OpenBackupFolderCommand}"/>
+                            </WrapPanel>
+                            <ItemsControl ItemsSource="{Binding Backups}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource Card}">
+                                            <DockPanel>
+                                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                                    <Button Style="{StaticResource OreButton}" Content="{Binding DataContext.L[restore], RelativeSource={RelativeSource AncestorType=Window}}" Command="{Binding DataContext.RestoreCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                                    <Button Style="{StaticResource OreGray}" Content="{Binding DataContext.L[delete], RelativeSource={RelativeSource AncestorType=Window}}" Command="{Binding DataContext.DeleteBackupCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                                </StackPanel>
+                                                <StackPanel><TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/><TextBlock Style="{StaticResource Sub}"><Run Text="{Binding DateText, Mode=OneWay}"/><Run Text="  ·  "/><Run Text="{Binding SizeText, Mode=OneWay}"/><Run Text="  ·  "/><Run Text="{Binding Channel, Mode=OneWay}"/></TextBlock></StackPanel>
+                                            </DockPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- ===== PERFILES ===== -->
+                    <ScrollViewer Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=profiles}" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="16">
+                            <TextBlock Text="{Binding L[profiles_title]}" Style="{StaticResource H1}"/>
+                            <ItemsControl ItemsSource="{Binding Profiles}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource Card}">
+                                            <DockPanel>
+                                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                                    <Button Style="{StaticResource OreButton}" Content="{Binding DataContext.L[use], RelativeSource={RelativeSource AncestorType=Window}}" Command="{Binding DataContext.SelectProfileCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                                    <Button Style="{StaticResource OreGray}" Content="{Binding DataContext.L[delete], RelativeSource={RelativeSource AncestorType=Window}}" Command="{Binding DataContext.DeleteProfileCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <TextBlock FontWeight="Bold"><Run Text="{Binding Name, Mode=OneWay}"/><Run Text="   "/><Run Text="{Binding Channel, Mode=OneWay}" Foreground="{DynamicResource SubTextBrush}"/></TextBlock>
+                                                    <TextBlock Foreground="{DynamicResource AccentHiBrush}" FontWeight="Bold" Text="{Binding DataContext.L[active], RelativeSource={RelativeSource AncestorType=Window}}" Visibility="{Binding IsActive, Converter={StaticResource BoolVis}}"/>
+                                                    <TextBlock Style="{StaticResource Sub}" Text="{Binding LastPlayedText}"/>
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="{Binding L[new_profile]}" Style="{StaticResource H1}" Margin="6,16,6,6"/>
+                            <WrapPanel>
+                                <TextBox Width="260" Text="{Binding NewProfileName, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding L[profile_name]}"/>
+                                <Button Style="{StaticResource OreGray}" Content="{Binding L[release]}" Command="{Binding SetNewChannelCommand}" CommandParameter="Release"/>
+                                <Button Style="{StaticResource OreGray}" Content="{Binding L[preview]}" Command="{Binding SetNewChannelCommand}" CommandParameter="Preview"/>
+                                <TextBlock Text="{Binding NewChannelName}" VerticalAlignment="Center" Margin="6,0"/>
+                                <Button Style="{StaticResource OreButton}" Content="{Binding L[create]}" Command="{Binding CreateProfileCommand}"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- ===== AJUSTES ===== -->
+                    <ScrollViewer Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=settings}" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="16" MaxWidth="760" HorizontalAlignment="Left">
+                            <TextBlock Text="{Binding L[nav_settings]}" Style="{StaticResource H1}"/>
+                            <Border Style="{StaticResource Card}"><StackPanel>
+                                <TextBlock Text="{Binding L[language]}" FontWeight="Bold"/>
+                                <WrapPanel><Button Style="{StaticResource OreGray}" Content="Español" Command="{Binding SetLanguageCommand}" CommandParameter="es"/><Button Style="{StaticResource OreGray}" Content="English" Command="{Binding SetLanguageCommand}" CommandParameter="en"/></WrapPanel>
+                                <TextBlock Text="{Binding L[theme]}" FontWeight="Bold" Margin="0,8,0,0"/>
+                                <WrapPanel><Button Style="{StaticResource OreGray}" Content="{Binding L[dark]}" Command="{Binding SetThemeCommand}" CommandParameter="Dark"/><Button Style="{StaticResource OreGray}" Content="{Binding L[light]}" Command="{Binding SetThemeCommand}" CommandParameter="Light"/></WrapPanel>
+                                <TextBlock Text="{Binding L[accent]}" FontWeight="Bold" Margin="0,8,0,0"/>
+                                <WrapPanel><TextBox Width="140" Text="{Binding Settings.Accent}"/><Button Style="{StaticResource OreButton}" Content="{Binding L[apply]}" Command="{Binding ApplyAccentCommand}"/></WrapPanel>
+                                <TextBlock Text="{Binding L[background]}" FontWeight="Bold" Margin="0,8,0,0"/>
+                                <WrapPanel><Button Style="{StaticResource OreGray}" Content="{Binding L[choose]}" Command="{Binding PickBackgroundCommand}"/><Button Style="{StaticResource OreGray}" Content="{Binding L[clear]}" Command="{Binding ClearBackgroundCommand}"/></WrapPanel>
+                            </StackPanel></Border>
+                            <Border Style="{StaticResource Card}"><StackPanel>
+                                <TextBlock Text="{Binding L[backup_folder]}" FontWeight="Bold"/>
+                                <DockPanel><Button DockPanel.Dock="Right" Style="{StaticResource OreGray}" Content="{Binding L[choose]}" Command="{Binding PickBackupDirCommand}"/><TextBox Text="{Binding Settings.BackupDir}"/></DockPanel>
+                                <TextBlock Text="{Binding L[max_backups]}" FontWeight="Bold" Margin="0,8,0,0"/>
+                                <TextBox Width="80" HorizontalAlignment="Left" Text="{Binding Settings.MaxBackups}"/>
+                                <CheckBox IsChecked="{Binding Settings.AutoBackup}" Content="{Binding L[auto_backup]}"/>
+                            </StackPanel></Border>
+                            <Border Style="{StaticResource Card}"><StackPanel>
+                                <CheckBox IsChecked="{Binding Settings.Animations}" Content="{Binding L[animations]}"/>
+                                <CheckBox IsChecked="{Binding Settings.SoftwareRender}" Content="{Binding L[software_render]}"/>
+                                <TextBlock Text="{Binding L[news_url]}" FontWeight="Bold" Margin="0,8,0,0"/>
+                                <TextBox Text="{Binding Settings.NewsUrl}"/>
+                                <TextBlock Text="{Binding L[update_url]}" FontWeight="Bold" Margin="0,8,0,0"/>
+                                <TextBox Text="{Binding Settings.UpdateUrl}"/>
+                                <WrapPanel>
+                                    <Button Style="{StaticResource OreGray}" Content="{Binding L[check_updates]}" Command="{Binding CheckUpdatesCommand}"/>
+                                    <Button Style="{StaticResource OreButton}" Content="{Binding L[download]}" Command="{Binding DownloadUpdateCommand}" Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolVis}}"/>
+                                </WrapPanel>
+                                <TextBlock Text="{Binding UpdateText}" Style="{StaticResource Sub}"/>
+                            </StackPanel></Border>
+                            <Border Style="{StaticResource Card}"><StackPanel>
+                                <TextBlock Text="{Binding L[storage]}" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding StorageText}" Style="{StaticResource Sub}"/>
+                                <Button Style="{StaticResource OreGray}" HorizontalAlignment="Left" Content="{Binding L[clean_temp]}" Command="{Binding CleanTempCommand}"/>
+                            </StackPanel></Border>
+                            <Button Style="{StaticResource OreButton}" HorizontalAlignment="Left" Content="{Binding L[save]}" Command="{Binding SaveSettingsCommand}"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
+                <!-- ===== PROGRESO ===== -->
+                <Border Grid.Row="2" Background="{DynamicResource PanelBrush}" Padding="12,8" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,2,0,0" Visibility="{Binding IsBusy, Converter={StaticResource BoolVis}}">
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right" Style="{StaticResource OreGray}" Padding="12,3" Content="{Binding L[cancel]}" Command="{Binding CancelCommand}"/>
+                        <TextBlock DockPanel.Dock="Left" Text="{Binding BusyText}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <ProgressBar Minimum="0" Maximum="100" Value="{Binding Progress}" Height="14" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center"/>
+                    </DockPanel>
+                </Border>
+
+                <!-- ===== NOTIFICACIONES ===== -->
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding Notifications}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="16" IsHitTestVisible="False">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,4" Padding="14,10" MaxWidth="420" BorderThickness="2" BorderBrush="{DynamicResource LineBrush}">
+                                <Border.Style><Style TargetType="Border"><Setter Property="Background" Value="#2E6B2E"/><Style.Triggers><DataTrigger Binding="{Binding IsError}" Value="True"><Setter Property="Background" Value="#8A2E2E"/></DataTrigger></Style.Triggers></Style></Border.Style>
+                                <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Foreground="White"/>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

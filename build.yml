@@ -1,0 +1,26 @@
+name: Build EXE
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Publish exe
+        run: dotnet publish src/BedrockLauncher/BedrockLauncher.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o dist/app
+      - name: Build installer
+        run: |
+          choco install innosetup -y --no-progress
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" installer/installer.iss
+        shell: pwsh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BedrockUltimateLauncher
+          path: |
+            dist/app/BedrockUltimateLauncher.exe
+            dist/BedrockUltimateLauncher-Setup.exe
