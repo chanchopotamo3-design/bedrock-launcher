@@ -1,6 +1,7 @@
-using System.IO.Compression;
-using System.Text.Json;
-using BedrockLauncher.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;          // ← esta línea la agregas tú
 namespace BedrockLauncher.Services;
 
 public record ImportResult(List<string> Imported, List<string> Errors);
